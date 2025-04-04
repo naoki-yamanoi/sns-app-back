@@ -1,0 +1,9 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "open-southeners.laravel-pint",
+  "bladeFormatter.format.indentSize": 2,
+  "notebook.defaultFormatter": "open-southeners.laravel-pint",
+  "[github-actions-workflow]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
