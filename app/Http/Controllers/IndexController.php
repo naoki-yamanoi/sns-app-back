@@ -9,7 +9,7 @@ class IndexController extends Controller
     public function index(): JsonResponse
     {
         return response()->json([
-            'test' => 'test'
+            'test' => 'test',
         ]);
     }
 }
