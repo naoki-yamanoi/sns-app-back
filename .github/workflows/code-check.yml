@@ -9,7 +9,7 @@ on:
       - "*"
 
 jobs:
-  phpstan:
+  PHPStan:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
@@ -29,7 +29,7 @@ jobs:
         run: |
           ./vendor/bin/phpstan analyse --memory-limit=512M
 
-  pint:
+  Pint:
     runs-on: ubuntu-24.04
 
     steps:
@@ -49,3 +49,24 @@ jobs:
       - name: Run Laravel Pint
         run: |
           ./vendor/bin/pint --test
+
+  PHPUnit:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: mbstring, xml, bcmath
+          tools: composer
+
+      - name: Install dependencies
+        run: composer install --no-progress --prefer-dist --no-interaction
+
+      - name: Run PHPUnit
+        run: |
+          php artisan test
