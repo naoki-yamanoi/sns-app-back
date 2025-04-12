@@ -13,8 +13,7 @@ class AuthController extends Controller
         $validated = $request->validated();
 
         // 認証処理
-        if (Auth::attempt($validated))
-        {
+        if (Auth::attempt($validated)) {
             // 認証に成功した場合、APIトークンを発行
             $user = Auth::user();
             $token = $user->createToken('YourAppName')->plainTextToken;
@@ -31,6 +30,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
+
         return response()->json(['message' => 'ログアウトしました。']);
     }
 }
