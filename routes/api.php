@@ -14,6 +14,7 @@ Route::get('/user', function (Request $request)
 })->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->get('/posts/follow', [PostController::class, 'getFollowPosts']);
+Route::middleware('auth:sanctum')->get('/posts/mine', [PostController::class, 'getMyPosts']);
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
