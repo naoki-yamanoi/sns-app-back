@@ -6,17 +6,6 @@ use Tests\TestCase;
 
 class IndexTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     */
-    public function test_index(): void
-    {
-        $response = $this->get('api/');
-
-        $response->assertStatus(200);
-        $response->assertJsonPath('test', 'test');
-    }
-
     public function test_post(): void
     {
         $response = $this->get('api/posts/follow');

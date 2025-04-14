@@ -1,10 +1,11 @@
 {
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "open-southeners.laravel-pint",
+  "laravel-pint.enable": true,
   "bladeFormatter.format.indentSize": 4,
-  "notebook.defaultFormatter": "open-southeners.laravel-pint",
   "[github-actions-workflow]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "laravel-pint.preset": "auto"
+  "[php]": {
+    "editor.defaultFormatter": "open-southeners.laravel-pint"
+  }
 }
