@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
+    public function getUserId()
+    {
+        return Auth::user()->id;
+    }
+
     public function getRecommendUsers()
     {
         $authUser = Auth::user();
