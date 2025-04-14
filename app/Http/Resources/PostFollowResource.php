@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class PostFollowResource extends JsonResource
 {
@@ -14,14 +15,16 @@ class PostFollowResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $authUser = Auth::user();
+
         return [
             'id' => $this->resource->id,
             'userId' => $this->resource->user->id,
             'userName' => $this->resource->user->name,
             'content' => $this->resource->post,
             'userImage' => $this->resource->user->userInfo->image,
-            'followFlg' => true,
-            'likeFlg' => false,
+            'followFlg' => $authUser->follows()->where('followed_id', $this->resource->user->id)->exists(),
+            'likeFlg' => $authUser->likes()->where('post_id', $this->resource->id)->exists(),
             'createdAt' => $this->resource->created_at->format('Y-m-d H:i'),
         ];
     }
