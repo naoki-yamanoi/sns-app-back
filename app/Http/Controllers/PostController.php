@@ -29,7 +29,7 @@ class PostController extends Controller
     {
         $user = Auth::user();
         // 自分の投稿全て取得
-        $myPosts = $user->posts()->get();
+        $myPosts = $user->posts()->orderBy('posts.created_at', 'desc')->get();
 
         return PostMineResource::collection($myPosts);
     }
@@ -37,13 +37,8 @@ class PostController extends Controller
     public function getLikePosts()
     {
         $user = Auth::user();
-        // いいねしている投稿ID全て取得
-        $likePostIds = $user->likes()->pluck('likes.post_id');
-
         // いいねしている投稿全て取得
-        $likePosts = Post::whereIn('id', $likePostIds)
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $likePosts = $user->likes()->orderBy('likes.created_at', 'desc')->get();
 
         return PostLikeResource::collection($likePosts);
     }
