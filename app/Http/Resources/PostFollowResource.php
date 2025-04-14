@@ -16,6 +16,7 @@ class PostFollowResource extends JsonResource
     {
         return [
             'id' => $this->resource->id,
+            'userId' => $this->resource->user->id,
             'userName' => $this->resource->user->name,
             'content' => $this->resource->post,
             'userImage' => $this->resource->user->userInfo->image,
