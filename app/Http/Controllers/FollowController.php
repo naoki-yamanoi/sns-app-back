@@ -10,12 +10,12 @@ class FollowController extends Controller
     public function createFollow(Request $request)
     {
         $user = Auth::user();
-        $user->follows()->attach($request->id);
+        $user->follows()->attach($request->followed_id);
     }
 
     public function deleteFollow(Request $request)
     {
         $user = Auth::user();
-        $user->follows()->detach($request->id);
+        $user->follows()->detach($request->followed_id);
     }
 }

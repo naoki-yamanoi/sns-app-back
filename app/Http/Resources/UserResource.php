@@ -22,7 +22,7 @@ class UserResource extends JsonResource
             'name' => $this->resource->name,
             'comment' => $this->resource->userInfo->comment,
             'image' => $this->resource->userInfo->image,
-            'followFlag' => $authUser->follows()->where('followed_id', $this->resource->id)->exists(),
+            'followFlg' => $authUser->follows()->where('followed_id', $this->resource->id)->exists(),
         ];
     }
 }

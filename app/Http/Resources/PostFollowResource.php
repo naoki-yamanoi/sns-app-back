@@ -20,8 +20,8 @@ class PostFollowResource extends JsonResource
             'userName' => $this->resource->user->name,
             'content' => $this->resource->post,
             'userImage' => $this->resource->user->userInfo->image,
-            'followFlag' => true,
-            'likeFlag' => false,
+            'followFlg' => true,
+            'likeFlg' => false,
             'createdAt' => $this->resource->created_at,
         ];
     }

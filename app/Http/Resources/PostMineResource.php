@@ -20,7 +20,7 @@ class PostMineResource extends JsonResource
             'userName' => $this->resource->user->name,
             'content' => $this->resource->post,
             'userImage' => $this->resource->user->userInfo->image,
-            'likeFlag' => false,
+            'likeFlg' => false,
             'createdAt' => $this->resource->created_at,
         ];
     }
