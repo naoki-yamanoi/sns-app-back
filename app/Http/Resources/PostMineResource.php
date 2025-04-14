@@ -21,7 +21,7 @@ class PostMineResource extends JsonResource
             'content' => $this->resource->post,
             'userImage' => $this->resource->user->userInfo->image,
             'likeFlg' => false,
-            'createdAt' => $this->resource->created_at,
+            'createdAt' => $this->resource->created_at->format('Y-m-d H:i'),
         ];
     }
 }

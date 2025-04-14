@@ -22,7 +22,7 @@ class PostFollowResource extends JsonResource
             'userImage' => $this->resource->user->userInfo->image,
             'followFlg' => true,
             'likeFlg' => false,
-            'createdAt' => $this->resource->created_at,
+            'createdAt' => $this->resource->created_at->format('Y-m-d H:i'),
         ];
     }
 }
