@@ -14,6 +14,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::get('/posts/follow', [PostController::class, 'getFollowPosts']);
+    Route::get('/posts/like', [PostController::class, 'getLikePosts']);
     Route::get('/posts/mine', [PostController::class, 'getMyPosts']);
 
     Route::post('/post/create', [PostController::class, 'createPost']);

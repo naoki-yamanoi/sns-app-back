@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\PostFollowResource;
+use App\Http\Resources\PostLikeResource;
 use App\Http\Resources\PostMineResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
@@ -31,6 +32,20 @@ class PostController extends Controller
         $myPosts = $user->posts()->get();
 
         return PostMineResource::collection($myPosts);
+    }
+
+    public function getLikePosts()
+    {
+        $user = Auth::user();
+        // いいねしている投稿ID全て取得
+        $likePostIds = $user->likes()->pluck('likes.post_id');
+
+        // いいねしている投稿全て取得
+        $likePosts = Post::whereIn('id', $likePostIds)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return PostLikeResource::collection($likePosts);
     }
 
     public function createPost(Request $request)
