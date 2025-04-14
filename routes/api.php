@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +21,8 @@ Route::middleware('auth:sanctum')->post('/post/create', [PostController::class, 
 
 Route::middleware('auth:sanctum')->post('/follow/create', [FollowController::class, 'createFollow']);
 Route::middleware('auth:sanctum')->post('/follow/delete', [FollowController::class, 'deleteFollow']);
+
+Route::middleware('auth:sanctum')->get('/users/recommend', [UserController::class, 'getRecommendUsers']);
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
