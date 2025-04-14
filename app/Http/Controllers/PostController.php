@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\PostFollowResource;
 use App\Http\Resources\PostMineResource;
 use App\Models\Post;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
@@ -30,5 +31,16 @@ class PostController extends Controller
         $myPosts = $user->posts()->get();
 
         return PostMineResource::collection($myPosts);
+    }
+
+    public function createPost(Request $request)
+    {
+        $user = Auth::user();
+        // 新規投稿作成
+        Post::create(['user_id' => $user->id, 'post' => $request->post]);
+
+        return response()->json([
+            'message' => '新規投稿を作成しました。',
+        ]);
     }
 }
