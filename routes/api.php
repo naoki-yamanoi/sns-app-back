@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [UserController::class, 'registUser']);
+Route::post('/password/reset', [AuthController::class, 'resetPassword']);
 
 // 認証必要なルート群
 Route::middleware('auth:sanctum')->group(function () {
