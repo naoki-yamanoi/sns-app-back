@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -29,8 +31,16 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        try {
+            $request->user()->currentAccessToken()->delete();
 
-        return response()->json(['message' => 'ログアウトしました。']);
+            return response()->json(['message' => 'ログアウトしました。']);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+
+            return response()->json([
+                'message' => 'ログアウトに失敗しました。',
+            ]);
+        }
     }
 }

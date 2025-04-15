@@ -6,8 +6,10 @@ use App\Http\Resources\PostFollowResource;
 use App\Http\Resources\PostLikeResource;
 use App\Http\Resources\PostMineResource;
 use App\Models\Post;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class PostController extends Controller
 {
@@ -46,11 +48,19 @@ class PostController extends Controller
     public function createPost(Request $request)
     {
         $user = Auth::user();
-        // 新規投稿作成
-        Post::create(['user_id' => $user->id, 'post' => $request->post]);
+        try {
+            // 新規投稿作成
+            Post::create(['user_id' => $user->id, 'post' => $request->post]);
 
-        return response()->json([
-            'message' => '新規投稿を作成しました。',
-        ]);
+            return response()->json([
+                'message' => '新規投稿を作成しました。',
+            ]);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+
+            return response()->json([
+                'message' => '新規投稿の作成に失敗しました。',
+            ]);
+        }
     }
 }
