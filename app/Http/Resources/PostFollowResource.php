@@ -22,7 +22,7 @@ class PostFollowResource extends JsonResource
             'userId' => $this->resource->user->id,
             'userName' => $this->resource->user->name,
             'content' => $this->resource->post,
-            'userImage' => $this->resource->user->userInfo->image,
+            'userImage' => asset('storage/'.$this->resource->user->userInfo->image),
             'followFlg' => $authUser->follows()->where('followed_id', $this->resource->user->id)->exists(),
             'likeFlg' => $authUser->likes()->where('post_id', $this->resource->id)->exists(),
             'createdAt' => $this->resource->created_at->format('Y-m-d H:i'),

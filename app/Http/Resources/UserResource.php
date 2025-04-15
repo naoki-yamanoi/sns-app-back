@@ -21,7 +21,7 @@ class UserResource extends JsonResource
             'id' => $this->resource->id,
             'name' => $this->resource->name,
             'comment' => $this->resource->userInfo->comment,
-            'image' => $this->resource->userInfo->image,
+            'image' => asset('storage/'.$this->resource->userInfo->image),
             'followFlg' => $authUser->follows()->where('followed_id', $this->resource->id)->exists(),
         ];
     }
