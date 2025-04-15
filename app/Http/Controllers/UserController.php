@@ -3,12 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\EditProfileRequest;
+use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    public function registUser(RegisterRequest $request)
+    {
+        $validated = $request->validated();
+
+        User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+        ]);
+
+        return response()->json([
+            'message' => '新規登録成功',
+        ]);
+    }
+
     public function getUserId()
     {
         return Auth::user()->id;
@@ -36,7 +53,7 @@ class UserController extends Controller
             'name' => $validated['userName'],
         ]);
         // user_info更新
-        $authUser->userInfo()->update([
+        $authUser->userInfo()->updateOrCreate([
             'image' => $path,
             'comment' => $validated['comment'],
         ]);
@@ -49,13 +66,13 @@ class UserController extends Controller
     public function getUserProfile()
     {
         $authUser = Auth::user();
-
+        $image = $authUser->userInfo->image ?? 'images/EvPRPJqfRE15VzVazYBPu0uFm6183NUcwdu0rW6g.png';
         // 公開URLの生成
-        $url = asset('storage/'.$authUser->userInfo->image);
+        $url = asset('storage/'.$image);
 
         return response()->json([
             'name' => $authUser->name,
-            'comment' => $authUser->userInfo->comment,
+            'comment' => $authUser->userInfo->comment ?? '',
             'url' => $url,
         ]);
     }
