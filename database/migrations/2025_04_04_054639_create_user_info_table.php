@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('user_info', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->unique();
             $table->string('image')->nullable();
             $table->string('comment')->nullable();
             $table->timestamp('created_at')->useCurrent();

@@ -56,21 +56,23 @@ class UserController extends Controller
     {
         $validated = $request->validated();
         $authUser = Auth::user();
+        $path = null;
 
         DB::beginTransaction();
-        $path = null;
         try {
-            // storage/app/public/imagesに保存
-            $path = $validated['userImage']->store('images', 'public');
+            if (array_key_exists('userImage', $validated)) {
+                // storage/app/public/imagesに保存
+                $path = $validated['userImage']->store('images', 'public');
+            }
             // users更新
             $authUser->update([
                 'name' => $validated['userName'],
             ]);
             // user_info更新
-            $authUser->userInfo()->updateOrCreate([
-                'image' => $path,
-                'comment' => $validated['comment'],
-            ]);
+            $authUser->userInfo()->updateOrCreate(
+                ['user_id' => $authUser->id],
+                ['image' => $path, 'comment' => $validated['comment']]
+            );
             DB::commit();
 
             return response()->json([
