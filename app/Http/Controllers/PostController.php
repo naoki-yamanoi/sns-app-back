@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\PostFollowResource;
+use App\Http\Resources\PostKeywordResource;
 use App\Http\Resources\PostLikeResource;
 use App\Http\Resources\PostMineResource;
 use App\Models\Post;
@@ -43,6 +44,16 @@ class PostController extends Controller
         $likePosts = $user->likes()->orderBy('likes.created_at', 'desc')->get();
 
         return PostLikeResource::collection($likePosts);
+    }
+
+    public function getSearchPosts(Request $request)
+    {
+        $keyword = $request->query('keyword');
+
+        // キーワードが含まれる投稿全て取得
+        $inKeywordPosts = $keyword ? Post::where('post', 'LIKE', '%'.$keyword.'%')->get() : collect();
+
+        return PostKeywordResource::collection($inKeywordPosts);
     }
 
     public function createPost(Request $request)
