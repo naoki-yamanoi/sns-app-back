@@ -46,8 +46,8 @@ class UserController extends Controller
     public function getRecommendUsers()
     {
         $authUser = Auth::user();
-        // 自身以外のユーザー取得
-        $users = User::where('id', '<>', $authUser->id)->get();
+        // 自身以外のユーザーをランダムで取得
+        $users = User::where('id', '<>', $authUser->id)->inRandomOrder()->limit(3)->get();
 
         return UserResource::collection($users);
     }
