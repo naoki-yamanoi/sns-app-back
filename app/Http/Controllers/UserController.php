@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
+    private $NO_IMAGE_PATH = 'images/EvPRPJqfRE15VzVazYBPu0uFm6183NUcwdu0rW6g.png';
+
     public function registUser(RegisterRequest $request)
     {
         $validated = $request->validated();
@@ -71,7 +73,7 @@ class UserController extends Controller
             // user_info更新
             $authUser->userInfo()->updateOrCreate(
                 ['user_id' => $authUser->id],
-                ['image' => $path, 'comment' => $validated['comment']]
+                ['image' => $path ?? $this->NO_IMAGE_PATH, 'comment' => $validated['comment']]
             );
             DB::commit();
 
