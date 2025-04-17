@@ -83,6 +83,24 @@ jobs:
       - name: Install dependencies
         run: composer install --no-progress --prefer-dist --no-interaction
 
+      - name: Wait for MySQL
+        run: |
+          sudo apt-get install -y mysql-client
+          until mysqladmin ping -h127.0.0.1 -uroot -proot --silent; do
+            echo "Waiting for MySQL..."
+            sleep 1
+          done
+
+      - name: Run migrations
+        env:
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: test_sns_db
+          DB_USERNAME: root
+          DB_PASSWORD: root
+        run: php artisan migrate --force
+
       - name: Run PHPUnit
         run: |
           php artisan test
