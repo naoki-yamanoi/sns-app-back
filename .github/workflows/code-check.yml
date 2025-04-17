@@ -57,6 +57,7 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
+          MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: test_sns_db
           MYSQL_USER: root
           MYSQL_PASSWORD: root
