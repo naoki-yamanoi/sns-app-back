@@ -3,6 +3,7 @@
 namespace Tests\Fixture;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UserFixture
 {
@@ -14,7 +15,7 @@ class UserFixture
         return User::create([
             'name' => $name,
             'email' => $email,
-            'password' => $password,
+            'password' => Hash::make($password),
         ]);
     }
 }
