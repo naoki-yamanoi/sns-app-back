@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\Feature;
+// namespace Tests\Feature;
 
-use Tests\TestCase;
+// use Tests\TestCase;
 
-class IndexTest extends TestCase
-{
+// class IndexTest extends TestCase
+// {
     // public function test_post(): void
     // {
         // $response = $this->get('api/posts/follow');
@@ -28,4 +28,4 @@ class IndexTest extends TestCase
         //     ],
         // ]);
     // }
-}
+// }
