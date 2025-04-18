@@ -62,7 +62,7 @@ class UserController extends Controller
 
         DB::beginTransaction();
         try {
-            if (array_key_exists('userImage', $validated)) {
+            if (! is_null($validated['userImage'])) {
                 // storage/app/public/imagesに保存
                 $path = $validated['userImage']->store('images', 'public');
             }
