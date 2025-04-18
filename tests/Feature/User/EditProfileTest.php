@@ -38,7 +38,6 @@ class EditProfileTest extends TestCase
             data: [
                 'userName' => 'ユーザー１変更後',
                 'comment' => null,
-                'userImage' => null,
             ],
             headers: ['Authorization' => 'Bearer '.$token]
         );
