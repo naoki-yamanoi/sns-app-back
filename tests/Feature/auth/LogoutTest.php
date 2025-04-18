@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Auth;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Fixture\UserFixture;
@@ -19,13 +19,13 @@ class LogoutTest extends TestCase
         $token = $user->createToken('YourAppName')->plainTextToken;
 
         // ログアウト処理
-        $response2 = $this->postJson(
+        $response = $this->postJson(
             uri: 'api/logout',
             headers: ['Authorization' => 'Bearer '.$token]
         );
-        $response2->assertStatus(200);
-        $response2->assertJsonPath('message', 'ログアウトしました。');
-        $response2->assertJsonStructure(['message']);
+        $response->assertStatus(200);
+        $response->assertJsonPath('message', 'ログアウトしました。');
+        $response->assertJsonStructure(['message']);
     }
 
     /**

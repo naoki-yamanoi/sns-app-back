@@ -72,12 +72,18 @@ class AuthController extends Controller
             ]);
 
             return response()->json(['message' => 'パスワードリセットに成功しました。']);
-        } catch (ModelNotFoundException|ValidationException $e) {
+        } catch (ModelNotFoundException $e) {
             Log::error($e->getMessage());
 
             return response()->json([
                 'message' => $e->getMessage(),
-            ]);
+            ], 404);
+        } catch (ValidationException $e) {
+            Log::error($e->getMessage());
+
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 422);
         } catch (Exception $e) {
             Log::error($e->getMessage());
 
