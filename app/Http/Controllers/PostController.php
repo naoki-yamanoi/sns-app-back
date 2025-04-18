@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\PostFollowResource;
+use App\Http\Resources\PostKeywordResource;
+use App\Http\Resources\PostLikeResource;
 use App\Http\Resources\PostMineResource;
 use App\Models\Post;
+use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class PostController extends Controller
 {
@@ -27,8 +32,46 @@ class PostController extends Controller
     {
         $user = Auth::user();
         // 自分の投稿全て取得
-        $myPosts = $user->posts()->get();
+        $myPosts = $user->posts()->orderBy('posts.created_at', 'desc')->get();
 
         return PostMineResource::collection($myPosts);
+    }
+
+    public function getLikePosts()
+    {
+        $user = Auth::user();
+        // いいねしている投稿全て取得
+        $likePosts = $user->likes()->orderBy('likes.created_at', 'desc')->get();
+
+        return PostLikeResource::collection($likePosts);
+    }
+
+    public function getSearchPosts(Request $request)
+    {
+        $keyword = $request->query('keyword');
+
+        // キーワードが含まれる投稿全て取得
+        $inKeywordPosts = $keyword ? Post::where('post', 'LIKE', '%'.$keyword.'%')->get() : collect();
+
+        return PostKeywordResource::collection($inKeywordPosts);
+    }
+
+    public function createPost(Request $request)
+    {
+        $user = Auth::user();
+        try {
+            // 新規投稿作成
+            Post::create(['user_id' => $user->id, 'post' => $request->post]);
+
+            return response()->json([
+                'message' => '新規投稿を作成しました。',
+            ]);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+
+            return response()->json([
+                'message' => '新規投稿の作成に失敗しました。',
+            ]);
+        }
     }
 }
