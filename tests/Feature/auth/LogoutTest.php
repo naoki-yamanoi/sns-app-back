@@ -25,7 +25,6 @@ class LogoutTest extends TestCase
         );
         $response->assertStatus(200);
         $response->assertJsonPath('message', 'ログアウトしました。');
-        $response->assertJsonStructure(['message']);
     }
 
     /**
@@ -39,6 +38,5 @@ class LogoutTest extends TestCase
         $response = $this->postJson('api/logout');
         $response->assertStatus(401);
         $response->assertJsonPath('message', 'Unauthenticated.');
-        $response->assertJsonStructure(['message']);
     }
 }
