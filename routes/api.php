@@ -5,13 +5,8 @@ use App\Http\Controllers\FollowController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
-
-Route::get('/', function () {
-    return response()->json([
-        'message' => '/にアクセス',
-    ]);
-});
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [UserController::class, 'registUser']);
@@ -36,6 +31,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/user', [UserController::class, 'getUserId']);
     Route::post('/user/profile/edit', [UserController::class, 'editProfile']);
+    Log::debug('000');
     Route::get('/user/profile', [UserController::class, 'getUserProfile']);
     Route::get('/users/recommend', [UserController::class, 'getRecommendUsers']);
 });
