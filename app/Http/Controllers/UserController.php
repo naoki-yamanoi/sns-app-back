@@ -56,16 +56,18 @@ class UserController extends Controller
 
     public function editProfile(EditProfileRequest $request)
     {
+        Log::error('aaa');
         $validated = $request->validated();
         $authUser = Auth::user();
         $path = null;
-
+        Log::error('bbb');
         DB::beginTransaction();
         try {
             if (array_key_exists('userImage', $validated)) {
                 // storage/app/public/imagesに保存
                 $path = $validated['userImage']->store('images', 'public');
             }
+            Log::error('ccc');
             // users更新
             $authUser->update([
                 'name' => $validated['userName'],
