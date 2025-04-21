@@ -18,7 +18,7 @@ Route::post('/register', [UserController::class, 'registUser']);
 Route::post('/password/reset', [AuthController::class, 'resetPassword']);
 
 // 認証必要なルート群
-Route::middleware('auth:sanctum')->group(function () {
+Route::group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::get('/posts/follow', [PostController::class, 'getFollowPosts']);
