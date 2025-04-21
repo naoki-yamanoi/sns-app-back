@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 
 class PostMineResource extends JsonResource
 {
+    private $NO_IMAGE = 'images/EvPRPJqfRE15VzVazYBPu0uFm6183NUcwdu0rW6g.png';
+
     /**
      * Transform the resource into an array.
      *
@@ -16,13 +18,14 @@ class PostMineResource extends JsonResource
     public function toArray(Request $request): array
     {
         $authUser = Auth::user();
+        $image_path = $this->resource->user->userInfo->image ?? $this->NO_IMAGE;
 
         return [
             'id' => $this->resource->id,
             'userId' => $this->resource->user->id,
             'userName' => $this->resource->user->name,
             'content' => $this->resource->post,
-            'userImage' => asset('storage/'.$this->resource->user->userInfo->image),
+            'userImage' => asset('storage/'.$image_path),
             'likeFlg' => $authUser->likes()->where('post_id', $this->resource->id)->exists(),
             'createdAt' => $this->resource->created_at->format('Y-m-d H:i'),
         ];
