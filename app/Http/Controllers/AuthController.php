@@ -47,6 +47,7 @@ class AuthController extends Controller
             Log::error($e->getMessage());
 
             return response()->json([
+                'errors' => 'ログアウトに失敗しました。',
                 'message' => 'ログアウトに失敗しました。',
             ]);
         }
