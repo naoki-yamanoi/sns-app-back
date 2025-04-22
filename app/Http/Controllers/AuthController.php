@@ -31,7 +31,7 @@ class AuthController extends Controller
             ]);
         }
 
-        return response()->json(['message' => 'ログインに失敗しました。'], 401);
+        return response()->json(['errors' => 'ログインに失敗しました。', 'message' => 'ログインに失敗しました。'], 401);
     }
 
     public function logout(Request $request)

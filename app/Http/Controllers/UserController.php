@@ -22,6 +22,13 @@ class UserController extends Controller
         $validated = $request->validated();
 
         try {
+            if (User::where('email', $validated['email'])->exists()) {
+                return response()->json([
+                    'errors' => '既に登録済みのメールアドレスです。',
+                    'message' => '既に登録済みのメールアドレスです。',
+                ]);
+            }
+
             User::create([
                 'name' => $validated['name'],
                 'email' => $validated['email'],
@@ -35,6 +42,7 @@ class UserController extends Controller
             Log::error($e->getMessage());
 
             return response()->json([
+                'errors' => '新規登録に失敗しました。',
                 'message' => '新規登録に失敗しました。',
             ]);
         }
