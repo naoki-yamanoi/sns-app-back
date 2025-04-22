@@ -67,6 +67,7 @@ class UserController extends Controller
         $validated = $request->validated();
         $authUser = Auth::user();
         $path = null;
+
         DB::beginTransaction();
         try {
             if (array_key_exists('userImage', $validated)) {
@@ -96,6 +97,7 @@ class UserController extends Controller
             Log::error($e->getMessage());
 
             return response()->json([
+                'errors' => 'プロフィール更新に失敗しました。',
                 'message' => 'プロフィール更新に失敗しました。',
             ]);
         }
