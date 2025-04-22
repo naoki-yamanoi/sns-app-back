@@ -5,38 +5,45 @@ namespace App\Http\Controllers;
 use App\Http\Requests\EditProfileRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\UserResource;
-use App\Models\User;
+use App\Services\UserService;
 use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
-    private $NO_IMAGE_PATH = 'images/EvPRPJqfRE15VzVazYBPu0uFm6183NUcwdu0rW6g.png';
+    public function __construct(
+        private readonly UserService $userService
+    ) {}
 
-    public function registUser(RegisterRequest $request)
+    /**
+     * ユーザー登録処理
+     */
+    public function registUser(RegisterRequest $request): JsonResponse
     {
         $validated = $request->validated();
 
         try {
-            if (User::where('email', $validated['email'])->exists()) {
-                return response()->json([
-                    'errors' => '既に登録済みのメールアドレスです。',
-                    'message' => '既に登録済みのメールアドレスです。',
-                ]);
-            }
-
-            User::create([
-                'name' => $validated['name'],
-                'email' => $validated['email'],
-                'password' => Hash::make($validated['password']),
-            ]);
+            $this->userService->register(
+                name: $validated['name'],
+                email: $validated['email'],
+                password: $validated['password']
+            );
 
             return response()->json([
                 'message' => '新規登録に成功しました。',
+            ]);
+        } catch (ValidationException $e) {
+            Log::error($e->getMessage());
+
+            return response()->json([
+                'errors' => '既に登録済みのメールアドレスです。',
+                'message' => '既に登録済みのメールアドレスです。',
             ]);
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -48,41 +55,37 @@ class UserController extends Controller
         }
     }
 
-    public function getUserId()
+    /**
+     * ログインユーザーID取得処理
+     */
+    public function getUserId(): int
     {
         return Auth::user()->id;
     }
 
-    public function getRecommendUsers()
+    /**
+     * おすすめユーザー取得処理
+     */
+    public function getRecommendUsers(): ResourceCollection
     {
-        $authUser = Auth::user();
-        // 自身以外のユーザーをランダムで取得
-        $users = User::where('id', '<>', $authUser->id)->inRandomOrder()->limit(3)->get();
+        $recommendUsers = $this->userService->getRecommends();
 
-        return UserResource::collection($users);
+        return UserResource::collection($recommendUsers);
     }
 
-    public function editProfile(EditProfileRequest $request)
+    /**
+     * プロフィール編集処理
+     */
+    public function editProfile(EditProfileRequest $request): JsonResponse
     {
         $validated = $request->validated();
-        $authUser = Auth::user();
         $path = null;
 
         DB::beginTransaction();
+
         try {
-            if (array_key_exists('userImage', $validated)) {
-                // storage/app/public/imagesに保存
-                $path = $validated['userImage']->store('images', 'public');
-            }
-            // users更新
-            $authUser->update([
-                'name' => $validated['userName'],
-            ]);
-            // user_info更新
-            $authUser->userInfo()->updateOrCreate(
-                ['user_id' => $authUser->id],
-                ['image' => $path ?? $this->NO_IMAGE_PATH, 'comment' => $validated['comment']]
-            );
+            $path = $this->userService->editProfile(validated: $validated, path: $path);
+
             DB::commit();
 
             return response()->json([
@@ -90,10 +93,12 @@ class UserController extends Controller
             ]);
         } catch (Exception $e) {
             DB::rollBack();
+
             // 保存されていたら画像も削除
             if ($path && Storage::disk('public')->exists($path)) {
                 Storage::disk('public')->delete($path);
             }
+
             Log::error($e->getMessage());
 
             return response()->json([
@@ -103,7 +108,10 @@ class UserController extends Controller
         }
     }
 
-    public function getUserProfile()
+    /**
+     * ログインユーザープロフィール取得処理
+     */
+    public function getUserProfile(): JsonResponse
     {
         $authUser = Auth::user();
         $image = $authUser->userInfo->image ?? 'images/EvPRPJqfRE15VzVazYBPu0uFm6183NUcwdu0rW6g.png';
