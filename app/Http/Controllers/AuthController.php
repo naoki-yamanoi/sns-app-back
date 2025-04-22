@@ -31,7 +31,10 @@ class AuthController extends Controller
             ]);
         }
 
-        return response()->json(['errors' => 'ログインに失敗しました。', 'message' => 'ログインに失敗しました。'], 401);
+        return response()->json([
+            'errors' => 'ログインに失敗しました。',
+            'message' => 'ログインに失敗しました。',
+        ], 401);
     }
 
     public function logout(Request $request)
@@ -76,18 +79,21 @@ class AuthController extends Controller
             Log::error($e->getMessage());
 
             return response()->json([
+                'errors' => $e->getMessage(),
                 'message' => $e->getMessage(),
             ], 404);
         } catch (ValidationException $e) {
             Log::error($e->getMessage());
 
             return response()->json([
+                'errors' => $e->getMessage(),
                 'message' => $e->getMessage(),
             ], 422);
         } catch (Exception $e) {
             Log::error($e->getMessage());
 
             return response()->json([
+                'errors' => 'パスワードリセットに失敗しました。',
                 'message' => 'パスワードリセットに失敗しました。',
             ]);
         }
