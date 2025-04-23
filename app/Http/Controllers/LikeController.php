@@ -15,7 +15,7 @@ class LikeController extends Controller
     ) {}
 
     /**
-     * いいね追加処理
+     * いいね処理
      */
     public function createLike(Request $request): JsonResponse
     {
@@ -35,7 +35,7 @@ class LikeController extends Controller
     }
 
     /**
-     * いいね削除処理
+     * いいね外す処理
      */
     public function deleteLike(Request $request): JsonResponse
     {
