@@ -6,62 +6,67 @@ use App\Http\Resources\PostFollowResource;
 use App\Http\Resources\PostKeywordResource;
 use App\Http\Resources\PostLikeResource;
 use App\Http\Resources\PostMineResource;
-use App\Models\Post;
+use App\Services\PostService;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\Log;
 
 class PostController extends Controller
 {
-    public function getFollowPosts()
-    {
-        $user = Auth::user();
-        // フォローしているユーザーID全て取得
-        $followUserIds = $user->follows()->pluck('follows.followed_id');
+    public function __construct(
+        private readonly PostService $postService
+    ) {}
 
-        // フォローしているユーザー投稿全て取得
-        $followPosts = Post::whereIn('user_id', $followUserIds)
-            ->orderBy('created_at', 'desc')
-            ->get();
+    /**
+     * フォローユーザーの投稿取得処理
+     */
+    public function getFollowPosts(): ResourceCollection
+    {
+        $followPosts = $this->postService->getFollows();
 
         return PostFollowResource::collection($followPosts);
     }
 
-    public function getMyPosts()
+    /**
+     * 自分の投稿取得処理
+     */
+    public function getMyPosts(): ResourceCollection
     {
-        $user = Auth::user();
-        // 自分の投稿全て取得
-        $myPosts = $user->posts()->orderBy('posts.created_at', 'desc')->get();
+        $myPosts = $this->postService->getMine();
 
         return PostMineResource::collection($myPosts);
     }
 
-    public function getLikePosts()
+    /**
+     * いいね投稿取得処理
+     */
+    public function getLikePosts(): ResourceCollection
     {
-        $user = Auth::user();
-        // いいねしている投稿全て取得
-        $likePosts = $user->likes()->orderBy('likes.created_at', 'desc')->get();
+        $likePosts = $this->postService->getLikes();
 
         return PostLikeResource::collection($likePosts);
     }
 
-    public function getSearchPosts(Request $request)
+    /**
+     * キーワード検索投稿取得処理
+     */
+    public function getSearchPosts(Request $request): ResourceCollection
     {
-        $keyword = $request->query('keyword');
-
         // キーワードが含まれる投稿全て取得
-        $inKeywordPosts = $keyword ? Post::where('post', 'LIKE', '%'.$keyword.'%')->get() : collect();
+        $inKeywordPosts = $this->postService->getSearch($request->query('keyword'));
 
         return PostKeywordResource::collection($inKeywordPosts);
     }
 
-    public function createPost(Request $request)
+    /**
+     * 新規投稿作成処理
+     */
+    public function createPost(Request $request): JsonResponse
     {
-        $user = Auth::user();
         try {
-            // 新規投稿作成
-            Post::create(['user_id' => $user->id, 'post' => $request->post]);
+            $this->postService->create($request->post);
 
             return response()->json([
                 'message' => '新規投稿を作成しました。',
