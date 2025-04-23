@@ -7,12 +7,6 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return response()->json([
-        'message' => '/にアクセス',
-    ]);
-});
-
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [UserController::class, 'registUser']);
 Route::post('/password/reset', [AuthController::class, 'resetPassword']);
