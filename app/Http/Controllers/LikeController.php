@@ -2,18 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\LikeService;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class LikeController extends Controller
 {
-    public function createLike(Request $request)
+    public function __construct(
+        private readonly LikeService $likeService
+    ) {}
+
+    /**
+     * いいね追加処理
+     */
+    public function createLike(Request $request): JsonResponse
     {
-        $user = Auth::user();
         try {
-            $user->likes()->attach($request->post_id);
+            $this->likeService->create($request->post_id);
 
             return response()->json([
                 'message' => 'いいねに成功しました。',
@@ -27,12 +34,13 @@ class LikeController extends Controller
         }
     }
 
-    public function deleteLike(Request $request)
+    /**
+     * いいね削除処理
+     */
+    public function deleteLike(Request $request): JsonResponse
     {
-        $user = Auth::user();
-
         try {
-            $user->likes()->detach($request->post_id);
+            $this->likeService->delete($request->post_id);
 
             return response()->json([
                 'message' => 'いいねを外すことに成功しました。',
